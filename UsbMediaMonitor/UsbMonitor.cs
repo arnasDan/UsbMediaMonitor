@@ -5,13 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Management;
 using System.IO;
+using System.Collections.Concurrent;
+using System.Diagnostics;
 
 namespace UsbMediaMonitor
 {
     public class UsbMonitor
     {
         private readonly ManagementEventWatcher watcher = new ManagementEventWatcher();
-        
+        public ConcurrentDictionary<string, FlashDrive> AllDrives { get; } = new ConcurrentDictionary<string, FlashDrive>();
+
+        public IEnumerable<FlashDrive> MonitoredDrives { get => AllDrives.Values.Where(drive => drive.Monitor); }
         
         public UsbMonitor()
         {
@@ -22,10 +26,32 @@ namespace UsbMediaMonitor
 
         private void VolumeChangeHandler(object sender, EventArrivedEventArgs e)
         {
-            var volume = e.NewEvent.Properties["DriveName"].Value.ToString().Substring(0, 1);
-            Console.WriteLine(volume);
-            var flashDrive = new DriveInfo(volume);
-            Console.WriteLine(flashDrive.VolumeLabel);
+            var volume = e.NewEvent.GetPropertyValue("DriveName").ToString();
+            var uuid = e.NewEvent.GetQualifierValue("UUID").ToString();
+            var volumeLabel = new DriveInfo(volume.Substring(0, 1)).VolumeLabel;
+
+            Debug.WriteLine($"Drive connected. UUID={uuid}, volume={volume}, volumeLabel={volumeLabel}");
+            if (AllDrives.TryGetValue(uuid, out var drive))
+            {
+                Debug.WriteLine("Drive already known");
+                drive.DriveLetter = volume;
+                drive.Name = volumeLabel;
+                if (drive.Monitor)
+                    drive.ExecuteCommand();
+            }
+            else
+            {
+                Debug.WriteLine("Drive is previously unknown");
+                AllDrives[uuid] = new FlashDrive(uuid)
+                {
+                    DriveLetter = volume,
+                    Name = volumeLabel,
+                    //DEBUG DATA
+                    ConsoleCommand = "cmd.exe",
+                    Monitor = true
+                };
+            }
+            
         }
     }
 }

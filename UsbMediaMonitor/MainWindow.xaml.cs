@@ -24,11 +24,7 @@ namespace UsbMediaMonitor
         {
             InitializeComponent();
             var tst = new UsbMonitor();
-            var tst1 = new FlashDrive()
-            {
-                ConsoleCommand = "pause"
-            };
-            tst1.ExecuteCommand();
+            
         }
     }
 }
