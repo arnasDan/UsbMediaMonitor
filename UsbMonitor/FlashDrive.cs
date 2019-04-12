@@ -72,7 +72,7 @@ namespace UsbMediaMonitor
 
         private void ExitedProcessHandler(object sender, EventArgs e)
         {
-            var senderProcess = sender as Process;
+            var senderProcess = sender as Process;                                                                                                                                                                  
             lock(commandLock)
                 if (process != senderProcess)
                 {

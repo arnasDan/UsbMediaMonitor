@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace UsbMediaMonitor.Properties
+namespace MonitorFormsGUI.Properties
 {
 
 
