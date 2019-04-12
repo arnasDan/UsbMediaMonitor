@@ -47,7 +47,7 @@ namespace UsbMediaMonitor
                     DriveLetter = volume,
                     Name = volumeLabel,
                     //DEBUG DATA
-                    ConsoleCommand = "cmd.exe",
+                    ConsoleCommand = "explorer.exe",
                     Monitor = true
                 };
             }

@@ -14,7 +14,6 @@ namespace UsbMediaMonitor
         public string Uuid { get; }
         public bool Monitor { get; set; }
         public bool IsProcessRunning { get; private set; }
-
         public string ConsoleCommand
         {
             get => command;
@@ -24,7 +23,11 @@ namespace UsbMediaMonitor
                 lock (commandLock)
                 {
                     command = value;
-                    process?.Dispose();
+                    if (!IsProcessRunning && process != null)
+                    {
+                        process.Dispose();
+                        process.Exited -= ExitedProcessHandler;
+                    }
                     process = new Process()
                     {
                         StartInfo = new ProcessStartInfo()
@@ -35,7 +38,7 @@ namespace UsbMediaMonitor
                         },
                         EnableRaisingEvents = true
                     };
-                    process.Exited += ExitedProcessExitedEventHandler;
+                    process.Exited += ExitedProcessHandler;
                 }      
             }         
         }
@@ -59,17 +62,23 @@ namespace UsbMediaMonitor
                 return;
             }
             Debug.WriteLine($"Executing command: {ConsoleCommand}");
-            IsProcessRunning = true;
+            
             lock (commandLock)
-                process.Start();
+            {
+                IsProcessRunning = true;
+                process?.Start();
+            }
         }
 
-        private void ExitedProcessExitedEventHandler(object sender, EventArgs e)
+        private void ExitedProcessHandler(object sender, EventArgs e)
         {
             var senderProcess = sender as Process;
             lock(commandLock)
                 if (process != senderProcess)
-                    senderProcess.Exited -= ExitedProcessExitedEventHandler;
+                {
+                    process.Dispose();
+                    senderProcess.Exited -= ExitedProcessHandler;
+                }
             IsProcessRunning = false;
         }
 
