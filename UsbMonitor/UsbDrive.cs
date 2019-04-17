@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace UsbMonitor
 {
@@ -13,11 +14,12 @@ namespace UsbMonitor
         public string DriveLetter { get; set; }
         public string Uuid { get; }
         public bool Monitor { get; set; }
+        [JsonIgnore]
         public bool IsProcessRunning { get; private set; }
         public string ConsoleCommand
         {
             get => command;
-            
+
             set
             {
                 lock (commandLock)
@@ -39,8 +41,8 @@ namespace UsbMonitor
                         EnableRaisingEvents = true
                     };
                     process.Exited += ExitedProcessHandler;
-                }      
-            }         
+                }
+            }
         }
 
         private string command;

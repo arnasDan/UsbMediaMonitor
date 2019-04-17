@@ -30,6 +30,7 @@
         {
             this.monitoredDrivesView = new System.Windows.Forms.DataGridView();
             this.Uuid = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.saveButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.monitoredDrivesView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -49,11 +50,22 @@
             this.Uuid.Name = "Uuid";
             this.Uuid.ReadOnly = true;
             // 
+            // saveButton
+            // 
+            this.saveButton.Location = new System.Drawing.Point(71, 187);
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(75, 23);
+            this.saveButton.TabIndex = 1;
+            this.saveButton.Text = "button1";
+            this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.saveButton);
             this.Controls.Add(this.monitoredDrivesView);
             this.Name = "MainWindow";
             this.Text = "MainWindow";
@@ -66,5 +78,6 @@
 
         private System.Windows.Forms.DataGridView monitoredDrivesView;
         private System.Windows.Forms.DataGridViewTextBoxColumn Uuid;
+        private System.Windows.Forms.Button saveButton;
     }
 }

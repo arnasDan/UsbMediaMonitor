@@ -8,15 +8,38 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UsbMonitor;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace MonitorFormsGUI
 {
     public partial class MainWindow : Form
     {
-        private UsbDriveMonitor monitor = new UsbDriveMonitor();
+        private UsbDriveMonitor monitor;
+        private JsonSerializer serializer = new JsonSerializer()
+        {
+            Formatting = Formatting.Indented
+        };
+
         public MainWindow()
         {
             InitializeComponent();
+            IEnumerable<UsbDrive> drives = null;
+
+            using (var reader = new StreamReader("drives.json"))
+            using (var jsonReader = new JsonTextReader(reader))
+            {
+                try
+                {
+                    drives = serializer.Deserialize<IEnumerable<UsbDrive>>(jsonReader);
+                }
+                catch (IOException)
+                {
+                    MessageBox.Show("Cannot read drive file!");
+                }
+            }
+            
+            monitor = new UsbDriveMonitor(drives);
             monitor.NewDriveArrived += NewDriveEventHandler;
         }
 
@@ -27,6 +50,22 @@ namespace MonitorFormsGUI
                 monitoredDrivesView.Invoke(action);
             else
                 action();
+        }
+
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var writer = new StreamWriter("drives.json"))
+                {
+                    serializer.Serialize(writer, monitor.MonitoredDrives);
+                }
+            }
+            catch (IOException exception)
+            {
+                MessageBox.Show("An error occured while saving: " + exception.Message);
+            }
+            MessageBox.Show("Drive list saved succesfully!");
         }
     }
 }

@@ -13,13 +13,18 @@ namespace UsbMonitor
     public class UsbDriveMonitor
     {
         private readonly ManagementEventWatcher watcher = new ManagementEventWatcher();
-        public ConcurrentDictionary<string, UsbDrive> AllDrives { get; } = new ConcurrentDictionary<string, UsbDrive>();
+        public ConcurrentDictionary<string, UsbDrive> AllDrives { get; }
         public event EventHandler<NewDriveConnectedEventArgs> NewDriveArrived;
 
         public IEnumerable<UsbDrive> MonitoredDrives { get => AllDrives.Values.Where(drive => drive.Monitor); }
         
-        public UsbDriveMonitor()
+        public UsbDriveMonitor(IEnumerable<UsbDrive> usbDrives = null)
         {
+            if (usbDrives == null)
+                AllDrives = new ConcurrentDictionary<string, UsbDrive>();
+            else
+                AllDrives = new ConcurrentDictionary<string, UsbDrive>(usbDrives.ToDictionary(drive => drive.Uuid));
+            
             watcher.Query = new WqlEventQuery("SELECT * FROM WIN32_VolumeChangeEvent WHERE EventType = 2");
             watcher.EventArrived += VolumeChangeHandler;
             watcher.Start();
