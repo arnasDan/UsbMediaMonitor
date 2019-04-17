@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UsbMediaMonitor
+namespace UsbMonitor
 {
-    public class FlashDrive
+    public class UsbDrive
     {
         public string Name { get; set; }
         public string DriveLetter { get; set; }
@@ -49,7 +49,7 @@ namespace UsbMediaMonitor
 
         private readonly object commandLock = new object();
 
-        public FlashDrive(string uuid)
+        public UsbDrive(string uuid)
         {
             Uuid = uuid;
         }
@@ -76,8 +76,8 @@ namespace UsbMediaMonitor
             lock(commandLock)
                 if (process != senderProcess)
                 {
-                    process.Dispose();
                     senderProcess.Exited -= ExitedProcessHandler;
+                    senderProcess.Dispose();
                 }
             IsProcessRunning = false;
         }
