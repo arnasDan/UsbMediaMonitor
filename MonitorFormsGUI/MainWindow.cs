@@ -15,8 +15,8 @@ namespace MonitorFormsGUI
 {
     public partial class MainWindow : Form
     {
-        private UsbDriveMonitor monitor;
-        private JsonSerializer serializer = new JsonSerializer()
+        private readonly UsbDriveMonitor _monitor;
+        private readonly JsonSerializer _serializer = new JsonSerializer()
         {
             Formatting = Formatting.Indented
         };
@@ -31,7 +31,7 @@ namespace MonitorFormsGUI
             {
                 try
                 {
-                    drives = serializer.Deserialize<IEnumerable<UsbDrive>>(jsonReader);
+                    drives = _serializer.Deserialize<IEnumerable<UsbDrive>>(jsonReader);
                 }
                 catch (IOException)
                 {
@@ -39,17 +39,17 @@ namespace MonitorFormsGUI
                 }
             }
             
-            monitor = new UsbDriveMonitor(drives);
-            monitor.NewDriveArrived += NewDriveEventHandler;
+            _monitor = new UsbDriveMonitor(drives);
+            _monitor.NewDriveArrived += NewDriveEventHandler;
         }
 
-        private void NewDriveEventHandler(object sender, NewDriveConnectedEventArgs e)
+        private void NewDriveEventHandler(object sender, DriveConnectedEventArgs e)
         {
-            Action action = () => monitoredDrivesView.Rows.Add(e.NewDrive.Uuid);
+            void Action() => monitoredDrivesView.Rows.Add(e.Drive.Uuid);
             if (monitoredDrivesView.InvokeRequired)
-                monitoredDrivesView.Invoke(action);
+                monitoredDrivesView.Invoke((Action) Action);
             else
-                action();
+                Action();
         }
 
         private void saveButton_Click(object sender, EventArgs e)
@@ -58,7 +58,7 @@ namespace MonitorFormsGUI
             {
                 using (var writer = new StreamWriter("drives.json"))
                 {
-                    serializer.Serialize(writer, monitor.MonitoredDrives);
+                    _serializer.Serialize(writer, _monitor.MonitoredDrives);
                 }
             }
             catch (IOException exception)

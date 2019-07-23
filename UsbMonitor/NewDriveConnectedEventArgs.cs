@@ -2,13 +2,13 @@
 
 namespace UsbMonitor
 {
-    public class NewDriveConnectedEventArgs : EventArgs
+    public class DriveConnectedEventArgs : EventArgs
     {
-        public UsbDrive NewDrive { get; private set; }
+        public UsbDrive Drive { get; }
 
-        public NewDriveConnectedEventArgs(UsbDrive usbDrive)
+        public DriveConnectedEventArgs(UsbDrive drive)
         {
-            NewDrive = usbDrive;
+            Drive = drive;
         }
     }
 }

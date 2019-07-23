@@ -12,55 +12,50 @@ namespace UsbMonitor
 {
     public class UsbDriveMonitor
     {
-        private readonly ManagementEventWatcher watcher = new ManagementEventWatcher();
+        private readonly ManagementEventWatcher _watcher = new ManagementEventWatcher();
         public ConcurrentDictionary<string, UsbDrive> AllDrives { get; }
-        public event EventHandler<NewDriveConnectedEventArgs> NewDriveArrived;
+        public event EventHandler<DriveConnectedEventArgs> NewDriveArrived;
 
         public IEnumerable<UsbDrive> MonitoredDrives { get => AllDrives.Values.Where(drive => drive.Monitor); }
         
         public UsbDriveMonitor(IEnumerable<UsbDrive> usbDrives = null)
         {
-            if (usbDrives == null)
-                AllDrives = new ConcurrentDictionary<string, UsbDrive>();
-            else
-                AllDrives = new ConcurrentDictionary<string, UsbDrive>(usbDrives.ToDictionary(drive => drive.Uuid));
+            usbDrives = usbDrives ?? Enumerable.Empty<UsbDrive>();
+            AllDrives = new ConcurrentDictionary<string, UsbDrive>(usbDrives.ToDictionary(drive => drive.Uuid));
             
-            watcher.Query = new WqlEventQuery("SELECT * FROM WIN32_VolumeChangeEvent WHERE EventType = 2");
-            watcher.EventArrived += VolumeChangeHandler;
-            watcher.Start();
+            _watcher.Query = new WqlEventQuery("SELECT * FROM WIN32_VolumeChangeEvent WHERE EventType = 2");
+            _watcher.EventArrived += VolumeChangeHandler;
+            _watcher.Start();
         }
 
         private void VolumeChangeHandler(object sender, EventArrivedEventArgs e)
         {
-            string volume = e.NewEvent.GetPropertyValue("DriveName").ToString();
-            string uuid = e.NewEvent.GetQualifierValue("UUID").ToString();
-            string volumeLabel = new DriveInfo(volume.Substring(0, 1)).VolumeLabel;
-            UsbDrive connectedDrive;
+            var volume = e.NewEvent.GetPropertyValue("DriveName").ToString();
+            var uuid = e.NewEvent.GetQualifierValue("UUID").ToString();
+            var volumeLabel = new DriveInfo(volume.Substring(0, 1)).VolumeLabel;
 
             Debug.WriteLine($"Drive connected. UUID={uuid}, volume={volume}, volumeLabel={volumeLabel}");
-            if (AllDrives.TryGetValue(uuid, out connectedDrive))
-            {
-                Debug.WriteLine("Drive already known");
-                connectedDrive.DriveLetter = volume;
-                connectedDrive.Name = volumeLabel;
-                if (connectedDrive.Monitor)
-                    connectedDrive.ExecuteCommand();
-                
-            }
-            else
-            {
-                Debug.WriteLine("Drive is previously unknown");
-                connectedDrive = new UsbDrive(uuid)
+            AllDrives.AddOrUpdate(
+                uuid,
+                new UsbDrive(uuid)
                 {
                     DriveLetter = volume,
                     Name = volumeLabel,
                     //DEBUG DATA
                     ConsoleCommand = "pause",
                     Monitor = true
-                };
-                AllDrives[uuid] = connectedDrive;
-            }
-            NewDriveArrived?.Invoke(this, new NewDriveConnectedEventArgs(connectedDrive));
+                },
+                (key, connectedDrive) =>
+                {
+                    Debug.WriteLine("Drive already known");
+                    connectedDrive.DriveLetter = volume;
+                    connectedDrive.Name = volumeLabel;
+                    if (connectedDrive.Monitor)
+                        connectedDrive.ExecuteCommand();
+                    return connectedDrive;
+                }
+            );
+            NewDriveArrived?.Invoke(this, new DriveConnectedEventArgs(AllDrives[uuid]));
         }
     }
 }

@@ -18,38 +18,38 @@ namespace UsbMonitor
         public bool IsProcessRunning { get; private set; }
         public string ConsoleCommand
         {
-            get => command;
+            get => _command;
 
             set
             {
-                lock (commandLock)
+                lock (_commandLock)
                 {
-                    command = value;
-                    if (!IsProcessRunning && process != null)
+                    _command = value;
+                    if (!IsProcessRunning && _process != null)
                     {
-                        process.Dispose();
-                        process.Exited -= ExitedProcessHandler;
+                        _process.Dispose();
+                        _process.Exited -= ExitedProcessHandler;
                     }
-                    process = new Process()
+                    _process = new Process()
                     {
                         StartInfo = new ProcessStartInfo()
                         {
                             //commented out to simplify testing WindowStyle = ProcessWindowStyle.Hidden,
                             FileName = "cmd.exe",
-                            Arguments = "/C " + command
+                            Arguments = "/C " + _command
                         },
                         EnableRaisingEvents = true
                     };
-                    process.Exited += ExitedProcessHandler;
+                    _process.Exited += ExitedProcessHandler;
                 }
             }
         }
 
-        private string command;
+        private string _command;
 
-        private Process process;
+        private Process _process;
 
-        private readonly object commandLock = new object();
+        private readonly object _commandLock = new object();
 
         public UsbDrive(string uuid)
         {
@@ -65,18 +65,18 @@ namespace UsbMonitor
             }
             Debug.WriteLine($"Executing command: {ConsoleCommand}");
             
-            lock (commandLock)
+            lock (_commandLock)
             {
                 IsProcessRunning = true;
-                process?.Start();
+                _process?.Start();
             }
         }
 
         private void ExitedProcessHandler(object sender, EventArgs e)
         {
-            var senderProcess = sender as Process;                                                                                                                                                                  
-            lock(commandLock)
-                if (process != senderProcess)
+            var senderProcess = (Process) sender;
+            lock(_commandLock)
+                if (_process != senderProcess)
                 {
                     senderProcess.Exited -= ExitedProcessHandler;
                     senderProcess.Dispose();
