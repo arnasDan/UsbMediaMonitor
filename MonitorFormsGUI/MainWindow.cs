@@ -1,44 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using UsbMonitor;
 using System.IO;
-using Newtonsoft.Json;
 
 namespace MonitorFormsGUI
 {
     public partial class MainWindow : Form
     {
         private readonly UsbDriveMonitor _monitor;
-        private readonly JsonSerializer _serializer = new JsonSerializer()
-        {
-            Formatting = Formatting.Indented
-        };
+        private readonly StorageManager<UsbDrive> _drivesStorage = new StorageManager<UsbDrive>();
 
         public MainWindow()
         {
             InitializeComponent();
             IEnumerable<UsbDrive> drives = null;
 
-            using (var reader = new StreamReader("drives.json"))
-            using (var jsonReader = new JsonTextReader(reader))
+            try
             {
-                try
-                {
-                    drives = _serializer.Deserialize<IEnumerable<UsbDrive>>(jsonReader);
-                }
-                catch (IOException)
-                {
-                    MessageBox.Show("Cannot read drive file!");
-                }
+                drives = _drivesStorage.Read();
             }
-            
+            catch (IOException exception)
+            {
+                MessageBox.Show("Cannot read drive file: " + exception.Message);
+            }
+
             _monitor = new UsbDriveMonitor(drives);
             _monitor.NewDriveArrived += NewDriveEventHandler;
         }
@@ -52,14 +38,11 @@ namespace MonitorFormsGUI
                 Action();
         }
 
-        private void saveButton_Click(object sender, EventArgs e)
+        private void SaveButton_Click(object sender, EventArgs e)
         {
             try
             {
-                using (var writer = new StreamWriter("drives.json"))
-                {
-                    _serializer.Serialize(writer, _monitor.MonitoredDrives);
-                }
+                _drivesStorage.Save(_monitor.MonitoredDrives);
             }
             catch (IOException exception)
             {

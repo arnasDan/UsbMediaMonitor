@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="StorageManager.cs" />
     <Compile Include="UsbDrive.cs" />
     <Compile Include="NewDriveConnectedEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
