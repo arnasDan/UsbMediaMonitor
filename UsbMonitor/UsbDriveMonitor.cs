@@ -16,7 +16,7 @@ namespace UsbMonitor
         public ConcurrentDictionary<string, UsbDrive> AllDrives { get; }
         public event EventHandler<DriveConnectedEventArgs> NewDriveArrived;
 
-        public IEnumerable<UsbDrive> MonitoredDrives { get => AllDrives.Values.Where(drive => drive.Monitor); }
+        public IEnumerable<UsbDrive> MonitoredDrives { get => AllDrives.Values.Where(drive => drive.Monitored); }
         
         public UsbDriveMonitor(IEnumerable<UsbDrive> usbDrives = null)
         {
@@ -43,14 +43,14 @@ namespace UsbMonitor
                     Name = volumeLabel,
                     //DEBUG DATA
                     ConsoleCommand = "pause",
-                    Monitor = true
+                    Monitored = true
                 },
                 (key, connectedDrive) =>
                 {
                     Debug.WriteLine("Drive already known");
                     connectedDrive.DriveLetter = volume;
                     connectedDrive.Name = volumeLabel;
-                    if (connectedDrive.Monitor)
+                    if (connectedDrive.Monitored)
                         connectedDrive.ExecuteCommand();
                     return connectedDrive;
                 }

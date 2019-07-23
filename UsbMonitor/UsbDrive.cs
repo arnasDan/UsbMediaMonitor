@@ -13,7 +13,7 @@ namespace UsbMonitor
         public string Name { get; set; }
         public string DriveLetter { get; set; }
         public string Uuid { get; }
-        public bool Monitor { get; set; }
+        public bool Monitored { get; set; }
         [JsonIgnore]
         public bool IsProcessRunning { get; private set; }
         public string ConsoleCommand
