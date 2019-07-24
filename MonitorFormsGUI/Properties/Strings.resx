@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddDrive" xml:space="preserve">
+    <value>Add drive</value>
+  </data>
   <data name="ConsoleCommand" xml:space="preserve">
     <value>Command to execute</value>
   </data>
@@ -131,6 +134,15 @@
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
+  </data>
+  <data name="OpenFile" xml:space="preserve">
+    <value>Open file...</value>
+  </data>
+  <data name="RandomDrive" xml:space="preserve">
+    <value>Random drive?</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="Uuid" xml:space="preserve">
     <value>UUID</value>
