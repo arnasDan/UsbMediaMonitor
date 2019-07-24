@@ -8,11 +8,12 @@ using Newtonsoft.Json;
 
 namespace UsbMonitor
 {
-    //TODO: fix disappering properties on save
     public class UsbDrive
     {
         public string Name { get; set; }
+        [JsonProperty]
         public string VolumeName { get; internal set; }
+        [JsonProperty]
         public string DriveLetter { get; internal set; }
         public string Uuid { get; }
         public bool Monitored { get; set; }
