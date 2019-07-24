@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.monitoredDrivesView = new System.Windows.Forms.DataGridView();
-            this.Uuid = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.saveButton = new System.Windows.Forms.Button();
             this.addDriveButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.monitoredDrivesView)).BeginInit();
@@ -38,18 +37,10 @@
             // monitoredDrivesView
             // 
             this.monitoredDrivesView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.monitoredDrivesView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Uuid});
             this.monitoredDrivesView.Location = new System.Drawing.Point(13, 13);
             this.monitoredDrivesView.Name = "monitoredDrivesView";
             this.monitoredDrivesView.Size = new System.Drawing.Size(775, 150);
             this.monitoredDrivesView.TabIndex = 0;
-            // 
-            // Uuid
-            // 
-            this.Uuid.HeaderText = "UUID";
-            this.Uuid.Name = "Uuid";
-            this.Uuid.ReadOnly = true;
             // 
             // saveButton
             // 
@@ -90,7 +81,6 @@
         #endregion
 
         private System.Windows.Forms.DataGridView monitoredDrivesView;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Uuid;
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Button addDriveButton;
     }

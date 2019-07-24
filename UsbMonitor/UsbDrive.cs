@@ -8,10 +8,12 @@ using Newtonsoft.Json;
 
 namespace UsbMonitor
 {
+    //TODO: fix disappering properties on save
     public class UsbDrive
     {
         public string Name { get; set; }
-        public string DriveLetter { get; set; }
+        public string VolumeName { get; internal set; }
+        public string DriveLetter { get; internal set; }
         public string Uuid { get; }
         public bool Monitored { get; set; }
         [JsonIgnore]
@@ -34,7 +36,7 @@ namespace UsbMonitor
                     {
                         StartInfo = new ProcessStartInfo()
                         {
-                            //commented out to simplify testing WindowStyle = ProcessWindowStyle.Hidden,
+                            //TODO: this is commented out to simplify testing: WindowStyle = ProcessWindowStyle.Hidden,
                             FileName = "cmd.exe",
                             Arguments = "/C " + _command
                         },

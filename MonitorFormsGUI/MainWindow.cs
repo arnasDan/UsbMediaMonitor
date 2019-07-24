@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
 using UsbMonitor;
 using System.IO;
+using System.Linq;
+using MonitorFormsGUI.Properties;
 
 namespace MonitorFormsGUI
 {
@@ -11,6 +14,7 @@ namespace MonitorFormsGUI
     {
         private readonly UsbDriveMonitor _monitor;
         private readonly StorageManager<UsbDrive> _drivesStorage = new StorageManager<UsbDrive>();
+        private readonly BindingList<UsbDrive> _drives;
 
         public MainWindow()
         {
@@ -28,16 +32,32 @@ namespace MonitorFormsGUI
             }
 
             _monitor = new UsbDriveMonitor(drives);
+            _drives = new BindingList<UsbDrive>(_monitor.AllDrives.Values.ToList());
+
+            InitialiseGrid();
+
             _monitor.DriveArrived += NewDriveEventHandler;
+        }
+
+        private void InitialiseGrid()
+        {
+            monitoredDrivesView.DataSource = _drives;
+            foreach (DataGridViewColumn column in monitoredDrivesView.Columns)
+                column.HeaderText = GetTranslation(column.Name);
+        }
+
+        private static string GetTranslation(string key)
+        {
+            return Strings.ResourceManager.GetString(key) ?? key;
         }
 
         private void NewDriveEventHandler(object sender, DriveConnectedEventArgs e)
         {
-            void AddDrive() => monitoredDrivesView.Rows.Add(e.Drive.Uuid);
+            var addDrive = new Action(() => _drives.Add(e.Drive));
             if (monitoredDrivesView.InvokeRequired)
-                monitoredDrivesView.Invoke((Action) AddDrive);
+                monitoredDrivesView.Invoke(addDrive);
             else
-                AddDrive();
+                addDrive();
         }
 
         private void SaveButton_Click(object sender, EventArgs e)

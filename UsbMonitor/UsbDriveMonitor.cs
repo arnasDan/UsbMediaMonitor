@@ -41,7 +41,7 @@ namespace UsbMonitor
                 new UsbDrive(uuid)
                 {
                     DriveLetter = volume,
-                    Name = volumeLabel,
+                    VolumeName = volumeLabel,
                     //TODO: Remove this, DEBUG DATA
                     ConsoleCommand = "pause",
                     Monitored = true
@@ -50,7 +50,7 @@ namespace UsbMonitor
                 {
                     Debug.WriteLine("Drive already known");
                     connectedDrive.DriveLetter = volume;
-                    connectedDrive.Name = volumeLabel;
+                    connectedDrive.VolumeName = volumeLabel;
                     if (connectedDrive.Monitored)
                         connectedDrive.ExecuteCommand();
                     return connectedDrive;
@@ -71,7 +71,7 @@ namespace UsbMonitor
             var drive = new UsbDrive(uuid)
             {
                 Monitored = true,
-                Name = "test",
+                VolumeName = "test",
                 ConsoleCommand = "pause",
                 DriveLetter = "X"
             };
