@@ -7,6 +7,7 @@ using System.Management;
 using System.IO;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace UsbMonitor
 {
@@ -14,10 +15,10 @@ namespace UsbMonitor
     {
         private readonly ManagementEventWatcher _watcher = new ManagementEventWatcher();
         public ConcurrentDictionary<string, UsbDrive> AllDrives { get; }
-        public event EventHandler<DriveConnectedEventArgs> NewDriveArrived;
+        public event EventHandler<DriveConnectedEventArgs> DriveArrived;
 
-        public IEnumerable<UsbDrive> MonitoredDrives { get => AllDrives.Values.Where(drive => drive.Monitored); }
-        
+        public IEnumerable<UsbDrive> MonitoredDrives => AllDrives.Values.Where(drive => drive.Monitored);
+
         public UsbDriveMonitor(IEnumerable<UsbDrive> usbDrives = null)
         {
             usbDrives = usbDrives ?? Enumerable.Empty<UsbDrive>();
@@ -41,7 +42,7 @@ namespace UsbMonitor
                 {
                     DriveLetter = volume,
                     Name = volumeLabel,
-                    //DEBUG DATA
+                    //TODO: Remove this, DEBUG DATA
                     ConsoleCommand = "pause",
                     Monitored = true
                 },
@@ -55,7 +56,28 @@ namespace UsbMonitor
                     return connectedDrive;
                 }
             );
-            NewDriveArrived?.Invoke(this, new DriveConnectedEventArgs(AllDrives[uuid]));
+            DriveArrived?.Invoke(this, new DriveConnectedEventArgs(AllDrives[uuid]));
+        }
+
+        [Conditional("DEBUG")]
+        public void SimulateDriveArrival(string uuid)
+        {
+            if (AllDrives.TryGetValue(uuid, out var existingDrive))
+            {
+                if (existingDrive.Monitored)
+                    existingDrive.ExecuteCommand();
+                return;
+            }
+            var drive = new UsbDrive(uuid)
+            {
+                Monitored = true,
+                Name = "test",
+                ConsoleCommand = "pause",
+                DriveLetter = "X"
+            };
+            AllDrives[uuid] = drive;
+
+            DriveArrived?.Invoke(this, new DriveConnectedEventArgs(drive));
         }
     }
 }

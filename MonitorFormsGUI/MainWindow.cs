@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Forms;
 using UsbMonitor;
 using System.IO;
@@ -14,6 +15,7 @@ namespace MonitorFormsGUI
         public MainWindow()
         {
             InitializeComponent();
+            ShowDebugElements();
             IEnumerable<UsbDrive> drives = null;
 
             try
@@ -26,16 +28,16 @@ namespace MonitorFormsGUI
             }
 
             _monitor = new UsbDriveMonitor(drives);
-            _monitor.NewDriveArrived += NewDriveEventHandler;
+            _monitor.DriveArrived += NewDriveEventHandler;
         }
 
         private void NewDriveEventHandler(object sender, DriveConnectedEventArgs e)
         {
-            void Action() => monitoredDrivesView.Rows.Add(e.Drive.Uuid);
+            void AddDrive() => monitoredDrivesView.Rows.Add(e.Drive.Uuid);
             if (monitoredDrivesView.InvokeRequired)
-                monitoredDrivesView.Invoke((Action) Action);
+                monitoredDrivesView.Invoke((Action) AddDrive);
             else
-                Action();
+                AddDrive();
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -49,6 +51,17 @@ namespace MonitorFormsGUI
                 MessageBox.Show("An error occured while saving: " + exception.Message);
             }
             MessageBox.Show("Drive list saved succesfully!");
+        }
+
+        private void AddDriveButton_Click(object sender, EventArgs e)
+        {
+            _monitor.SimulateDriveArrival("DEBUG_UUID");
+        }
+
+        [Conditional("DEBUG")]
+        private void ShowDebugElements()
+        {
+            addDriveButton.Show();
         }
     }
 }

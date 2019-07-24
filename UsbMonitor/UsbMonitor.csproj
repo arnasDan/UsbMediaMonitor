@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="StorageManager.cs" />
     <Compile Include="UsbDrive.cs" />
-    <Compile Include="NewDriveConnectedEventArgs.cs" />
+    <Compile Include="DriveConnectedEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UsbDriveMonitor.cs" />
   </ItemGroup>
