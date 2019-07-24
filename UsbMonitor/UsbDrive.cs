@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 
 namespace UsbMonitor
 {
+    //TODO: review commandLock, seems to lock for too long
     public class UsbDrive
     {
         public string Name { get; set; }
@@ -37,7 +38,7 @@ namespace UsbMonitor
                     {
                         StartInfo = new ProcessStartInfo()
                         {
-                            //TODO: this is commented out to simplify testing: WindowStyle = ProcessWindowStyle.Hidden,
+                            WindowStyle = ProcessWindowStyle.Hidden,
                             FileName = "cmd.exe",
                             Arguments = "/C " + _command
                         },

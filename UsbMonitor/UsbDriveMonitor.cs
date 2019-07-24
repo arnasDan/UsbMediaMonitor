@@ -41,10 +41,7 @@ namespace UsbMonitor
                 new UsbDrive(uuid)
                 {
                     DriveLetter = volume,
-                    VolumeName = volumeLabel,
-                    //TODO: Remove this, DEBUG DATA
-                    ConsoleCommand = "pause",
-                    Monitored = true
+                    VolumeName = volumeLabel
                 },
                 (key, connectedDrive) =>
                 {
@@ -72,7 +69,7 @@ namespace UsbMonitor
             {
                 Monitored = true,
                 VolumeName = "test",
-                ConsoleCommand = "pause",
+                ConsoleCommand = "explorer.exe",
                 DriveLetter = "X"
             };
             AllDrives[uuid] = drive;
