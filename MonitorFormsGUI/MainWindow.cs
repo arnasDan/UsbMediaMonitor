@@ -40,6 +40,7 @@ namespace MonitorFormsGUI
             ShowIcon = false;
 
             _monitor.DriveArrived += NewDriveEventHandler;
+            _monitor.DriveRemoved += DisconnectedDriveEventHandler;
 
             FormClosing += (s, _) =>
             {
@@ -98,7 +99,7 @@ namespace MonitorFormsGUI
             return Strings.ResourceManager.GetString(key) ?? key;
         }
 
-        private void NewDriveEventHandler(object sender, DriveConnectedEventArgs e)
+        private void NewDriveEventHandler(object sender, DriveConnectionEventArgs e)
         {
             var addDrive = new Action(() =>
             {
@@ -114,6 +115,18 @@ namespace MonitorFormsGUI
                 monitoredDrivesView.Invoke(addDrive);
             else
                 addDrive();
+        }
+        private void DisconnectedDriveEventHandler(object sender, DriveConnectionEventArgs e)
+        {
+            var removeDrive = new Action(() => _drives.Remove(e.Drive));
+            if (!e.Drive.Monitored)
+            {
+                if (monitoredDrivesView.InvokeRequired)
+                    monitoredDrivesView.Invoke(removeDrive);
+                else
+                    removeDrive();
+            }
+
         }
 
         private void SaveButton_Click(object sender, EventArgs e)

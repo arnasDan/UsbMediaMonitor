@@ -12,7 +12,8 @@ namespace UsbMonitor
     {
         private readonly ManagementEventWatcher _watcher = new ManagementEventWatcher();
         public ConcurrentDictionary<string, UsbDrive> AllDrives { get; }
-        public event EventHandler<DriveConnectedEventArgs> DriveArrived;
+        public event EventHandler<DriveConnectionEventArgs> DriveArrived;
+        public event EventHandler<DriveConnectionEventArgs> DriveRemoved;
 
         public IEnumerable<UsbDrive> MonitoredDrives => AllDrives.Values.Where(drive => drive.Monitored);
 
@@ -21,15 +22,27 @@ namespace UsbMonitor
             usbDrives = usbDrives ?? Enumerable.Empty<UsbDrive>();
             AllDrives = new ConcurrentDictionary<string, UsbDrive>(usbDrives.ToDictionary(drive => drive.Uuid));
             
-            _watcher.Query = new WqlEventQuery("SELECT * FROM WIN32_VolumeChangeEvent WHERE EventType = 2");
+            _watcher.Query = new WqlEventQuery("SELECT * FROM WIN32_VolumeChangeEvent WHERE EventType = 2 or EventType = 3");
             _watcher.EventArrived += VolumeChangeHandler;
             _watcher.Start();
         }
 
         private void VolumeChangeHandler(object sender, EventArrivedEventArgs e)
         {
-            var volume = e.NewEvent.GetPropertyValue("DriveName").ToString();
             var uuid = e.NewEvent.GetQualifierValue("UUID").ToString();
+
+            var eventType = e.NewEvent.Properties["EventType"].Value.ToString();
+            if (eventType == "3") //"Remove" event
+            {
+                if (AllDrives.TryGetValue(uuid, out var removedDrive))
+                {
+                    AllDrives.TryRemove(uuid, out _);
+                    DriveRemoved?.Invoke(this, new DriveConnectionEventArgs(removedDrive));
+                }
+                return;
+            }
+
+            var volume = e.NewEvent.GetPropertyValue("DriveName").ToString();
             var volumeLabel = new DriveInfo(volume.Substring(0, 1)).VolumeLabel;
 
             Debug.WriteLine($"Drive connected. UUID={uuid}, volume={volume}, volumeLabel={volumeLabel}");
@@ -50,7 +63,7 @@ namespace UsbMonitor
                     return connectedDrive;
                 }
             );
-            DriveArrived?.Invoke(this, new DriveConnectedEventArgs(drive));
+            DriveArrived?.Invoke(this, new DriveConnectionEventArgs(drive));
         }
 
         [Conditional("DEBUG")]
@@ -82,7 +95,7 @@ namespace UsbMonitor
                 }
             );
 
-            DriveArrived?.Invoke(this, new DriveConnectedEventArgs(drive));
+            DriveArrived?.Invoke(this, new DriveConnectionEventArgs(drive));
         }
     }
 }
