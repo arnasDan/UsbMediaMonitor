@@ -33,7 +33,7 @@ namespace UsbMonitor
             var volumeLabel = new DriveInfo(volume.Substring(0, 1)).VolumeLabel;
 
             Debug.WriteLine($"Drive connected. UUID={uuid}, volume={volume}, volumeLabel={volumeLabel}");
-            AllDrives.AddOrUpdate(
+            var drive = AllDrives.AddOrUpdate(
                 uuid,
                 new UsbDrive(uuid)
                 {
@@ -50,7 +50,7 @@ namespace UsbMonitor
                     return connectedDrive;
                 }
             );
-            DriveArrived?.Invoke(this, new DriveConnectedEventArgs(AllDrives[uuid]));
+            DriveArrived?.Invoke(this, new DriveConnectedEventArgs(drive));
         }
 
         [Conditional("DEBUG")]
@@ -62,14 +62,25 @@ namespace UsbMonitor
                     existingDrive.ExecuteCommand();
                 return;
             }
-            var drive = new UsbDrive(uuid)
-            {
-                Monitored = true,
-                VolumeName = "test",
-                ConsoleCommand = "explorer.exe",
-                DriveLetter = "X"
-            };
-            AllDrives[uuid] = drive;
+            var drive = AllDrives.AddOrUpdate(
+                uuid,
+                new UsbDrive(uuid)
+                {
+                    Monitored = true,
+                    VolumeName = "test",
+                    ConsoleCommand = "explorer.exe",
+                    DriveLetter = "X"
+                },
+                (key, connectedDrive) =>
+                {
+                    Debug.WriteLine("Drive already known");
+                    connectedDrive.DriveLetter = "X";
+                    connectedDrive.VolumeName = "test";
+                    if (connectedDrive.Monitored)
+                        connectedDrive.ExecuteCommand();
+                    return connectedDrive;
+                }
+            );
 
             DriveArrived?.Invoke(this, new DriveConnectedEventArgs(drive));
         }

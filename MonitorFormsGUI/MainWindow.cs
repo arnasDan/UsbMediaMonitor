@@ -10,13 +10,17 @@ using MonitorFormsGUI.Properties;
 
 namespace MonitorFormsGUI
 {
-    //TODO: refresh more often - extend UsbDrive with INotifyModified?
     public partial class MainWindow : Form
     {
         private readonly UsbDriveMonitor _monitor;
         private readonly StorageManager<UsbDrive> _drivesStorage = new StorageManager<UsbDrive>();
         private readonly BindingList<UsbDrive> _drives;
-        private bool _requiresSave = false;
+
+        private bool RequiresSave
+        {
+            get => saveRequiredLabel.Visible;
+            set => saveRequiredLabel.Visible = value;
+        }
 
         public MainWindow()
         {
@@ -43,6 +47,14 @@ namespace MonitorFormsGUI
             ShowIcon = false;
 
             _monitor.DriveArrived += NewDriveEventHandler;
+
+            FormClosing += (s, _) =>
+            {
+                if (!RequiresSave) return;
+                var result = MessageBox.Show(Strings.SaveUnsaved, "", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                    Save();
+            };
         }
 
         private void InitializeGrid()
@@ -77,6 +89,7 @@ namespace MonitorFormsGUI
             monitoredDrivesView.Columns.Add(openFileColumn);
 
             monitoredDrivesView.CellContentClick += MonitoredDrivesView_CellContentClick;
+            monitoredDrivesView.CellValueChanged += (s, _) => { RequiresSave = true; };
         }
 
         private void LocalizeControls()
@@ -97,7 +110,10 @@ namespace MonitorFormsGUI
                 if (_drives.All(d => d.Uuid != e.Drive.Uuid))
                     _drives.Add(e.Drive);
                 else
-                    _drives.ResetBindings();
+                {
+                    monitoredDrivesView.Update();
+                    monitoredDrivesView.Refresh();
+                }
             });
             if (monitoredDrivesView.InvokeRequired)
                 monitoredDrivesView.Invoke(addDrive);
@@ -107,15 +123,22 @@ namespace MonitorFormsGUI
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
+            Save(true);
+        }
+
+        private void Save(bool showSuccessMessage = false)
+        {
             try
             {
                 _drivesStorage.Save(_monitor.MonitoredDrives);
+                RequiresSave = false;
+                if (showSuccessMessage)
+                    MessageBox.Show(Strings.DriveListSaved);
             }
             catch (IOException exception)
             {
                 MessageBox.Show(Strings.SavingError + exception.Message);
             }
-            MessageBox.Show(Strings.DriveListSaved);
         }
 
         private void AddDriveButton_Click(object sender, EventArgs e)
@@ -127,15 +150,15 @@ namespace MonitorFormsGUI
         private void MonitoredDrivesView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             var senderGrid = (DataGridView) sender;
-            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
+            if (!(senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn) || e.RowIndex < 0) return;
+
+            using (var openFileDialog = new OpenFileDialog())
             {
-                var openFileDialog = new OpenFileDialog();
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    _drives[e.RowIndex].ConsoleCommand = $"\"{openFileDialog.FileName}\"";
-                    monitoredDrivesView.Update();
-                    monitoredDrivesView.Refresh();
-                }
+                if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+                _drives[e.RowIndex].ConsoleCommand = $"\"{openFileDialog.FileName}\"";
+                RequiresSave = true;
+                monitoredDrivesView.Update();
+                monitoredDrivesView.Refresh();
             }
         }
 

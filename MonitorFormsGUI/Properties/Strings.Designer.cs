@@ -160,6 +160,24 @@ namespace MonitorFormsGUI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There are unsaved changes.
+        /// </summary>
+        internal static string SaveRequired {
+            get {
+                return ResourceManager.GetString("SaveRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save unsaved changes?.
+        /// </summary>
+        internal static string SaveUnsaved {
+            get {
+                return ResourceManager.GetString("SaveUnsaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occured while saving: .
         /// </summary>
         internal static string SavingError {

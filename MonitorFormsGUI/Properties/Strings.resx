@@ -159,4 +159,10 @@
   <data name="CannotReadDriveFile" xml:space="preserve">
     <value>Cannot read drive file: </value>
   </data>
+  <data name="SaveRequired" xml:space="preserve">
+    <value>There are unsaved changes</value>
+  </data>
+  <data name="SaveUnsaved" xml:space="preserve">
+    <value>Save unsaved changes?</value>
+  </data>
 </root>
