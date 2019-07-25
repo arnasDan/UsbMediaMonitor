@@ -150,4 +150,13 @@
   <data name="VolumeName" xml:space="preserve">
     <value>Volume name</value>
   </data>
+  <data name="DriveListSaved" xml:space="preserve">
+    <value>Drive list saved succesfully!</value>
+  </data>
+  <data name="SavingError" xml:space="preserve">
+    <value>An error occured while saving: </value>
+  </data>
+  <data name="CannotReadDriveFile" xml:space="preserve">
+    <value>Cannot read drive file: </value>
+  </data>
 </root>

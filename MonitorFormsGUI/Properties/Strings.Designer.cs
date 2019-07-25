@@ -19,7 +19,7 @@ namespace MonitorFormsGUI.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -70,6 +70,15 @@ namespace MonitorFormsGUI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot read drive file: .
+        /// </summary>
+        internal static string CannotReadDriveFile {
+            get {
+                return ResourceManager.GetString("CannotReadDriveFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command to execute.
         /// </summary>
         internal static string ConsoleCommand {
@@ -84,6 +93,15 @@ namespace MonitorFormsGUI.Properties {
         internal static string DriveLetter {
             get {
                 return ResourceManager.GetString("DriveLetter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drive list saved succesfully!.
+        /// </summary>
+        internal static string DriveListSaved {
+            get {
+                return ResourceManager.GetString("DriveListSaved", resourceCulture);
             }
         }
         
@@ -138,6 +156,15 @@ namespace MonitorFormsGUI.Properties {
         internal static string Save {
             get {
                 return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occured while saving: .
+        /// </summary>
+        internal static string SavingError {
+            get {
+                return ResourceManager.GetString("SavingError", resourceCulture);
             }
         }
         

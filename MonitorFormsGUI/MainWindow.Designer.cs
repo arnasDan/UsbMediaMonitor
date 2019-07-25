@@ -37,10 +37,12 @@
             // 
             // monitoredDrivesView
             // 
+            this.monitoredDrivesView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.monitoredDrivesView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.monitoredDrivesView.Location = new System.Drawing.Point(13, 13);
             this.monitoredDrivesView.Name = "monitoredDrivesView";
-            this.monitoredDrivesView.Size = new System.Drawing.Size(1033, 150);
+            this.monitoredDrivesView.Size = new System.Drawing.Size(1035, 150);
             this.monitoredDrivesView.TabIndex = 0;
             // 
             // saveButton
@@ -79,11 +81,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1058, 200);
+            this.ClientSize = new System.Drawing.Size(1059, 201);
             this.Controls.Add(this.randomDriveCheckbox);
             this.Controls.Add(this.addDriveButton);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.monitoredDrivesView);
+            this.MinimumSize = new System.Drawing.Size(1075, 0);
             this.Name = "MainWindow";
             this.Text = "UsbMediaMonitor";
             ((System.ComponentModel.ISupportInitialize)(this.monitoredDrivesView)).EndInit();

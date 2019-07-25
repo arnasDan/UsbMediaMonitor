@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 
 namespace UsbMonitor
 {
-    //TODO: review commandLock, seems to lock for too long
     public class UsbDrive
     {
         public string Name { get; set; }

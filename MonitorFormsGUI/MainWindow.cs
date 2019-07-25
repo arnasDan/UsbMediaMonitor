@@ -30,7 +30,7 @@ namespace MonitorFormsGUI
             }
             catch (IOException exception)
             {
-                MessageBox.Show("Cannot read drive file: " + exception.Message);
+                MessageBox.Show(Strings.CannotReadDriveFile + exception.Message);
             }
 
             _monitor = new UsbDriveMonitor(drives);
@@ -39,9 +39,7 @@ namespace MonitorFormsGUI
             InitializeGrid();
             LocalizeControls();
 
-            FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
-            MinimizeBox = false;
             ShowIcon = false;
 
             _monitor.DriveArrived += NewDriveEventHandler;
@@ -50,8 +48,25 @@ namespace MonitorFormsGUI
         private void InitializeGrid()
         {
             monitoredDrivesView.DataSource = _drives;
+            monitoredDrivesView.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False;
             foreach (DataGridViewColumn column in monitoredDrivesView.Columns)
+            {
                 column.HeaderText = GetTranslation(column.Name);
+                switch (column.Name)
+                {
+                    case "Uuid":
+                        column.Width = 225;
+                        break;
+                    case "ConsoleCommand":
+                        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                        break;
+                    default:
+                        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                        break;
+                }
+            }
+
+
             var openFileColumn = new DataGridViewButtonColumn()
             {
                 Name = "OpenFile",
@@ -59,8 +74,9 @@ namespace MonitorFormsGUI
                 HeaderText = "",
                 UseColumnTextForButtonValue = true
             };
-            monitoredDrivesView.CellContentClick += MonitoredDrivesView_CellContentClick;
             monitoredDrivesView.Columns.Add(openFileColumn);
+
+            monitoredDrivesView.CellContentClick += MonitoredDrivesView_CellContentClick;
         }
 
         private void LocalizeControls()
@@ -78,7 +94,7 @@ namespace MonitorFormsGUI
         {
             var addDrive = new Action(() =>
             {
-                if (!_drives.Any(d => d.Uuid == e.Drive.Uuid))
+                if (_drives.All(d => d.Uuid != e.Drive.Uuid))
                     _drives.Add(e.Drive);
                 else
                     _drives.ResetBindings();
@@ -97,9 +113,9 @@ namespace MonitorFormsGUI
             }
             catch (IOException exception)
             {
-                MessageBox.Show("An error occured while saving: " + exception.Message);
+                MessageBox.Show(Strings.SavingError + exception.Message);
             }
-            MessageBox.Show("Drive list saved succesfully!");
+            MessageBox.Show(Strings.DriveListSaved);
         }
 
         private void AddDriveButton_Click(object sender, EventArgs e)
@@ -115,7 +131,11 @@ namespace MonitorFormsGUI
             {
                 var openFileDialog = new OpenFileDialog();
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
-                    _drives[e.RowIndex].ConsoleCommand = openFileDialog.FileName;
+                {
+                    _drives[e.RowIndex].ConsoleCommand = $"\"{openFileDialog.FileName}\"";
+                    monitoredDrivesView.Update();
+                    monitoredDrivesView.Refresh();
+                }
             }
         }
 
