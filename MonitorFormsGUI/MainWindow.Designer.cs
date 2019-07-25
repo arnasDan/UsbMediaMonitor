@@ -44,13 +44,13 @@
             this.monitoredDrivesView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.monitoredDrivesView.Location = new System.Drawing.Point(13, 13);
             this.monitoredDrivesView.Name = "monitoredDrivesView";
-            this.monitoredDrivesView.Size = new System.Drawing.Size(1035, 150);
+            this.monitoredDrivesView.Size = new System.Drawing.Size(1035, 155);
             this.monitoredDrivesView.TabIndex = 0;
             // 
             // saveButton
             // 
             this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.saveButton.Location = new System.Drawing.Point(13, 169);
+            this.saveButton.Location = new System.Drawing.Point(13, 174);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(75, 23);
             this.saveButton.TabIndex = 1;
@@ -61,7 +61,7 @@
             // addDriveButton
             // 
             this.addDriveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addDriveButton.Location = new System.Drawing.Point(870, 169);
+            this.addDriveButton.Location = new System.Drawing.Point(870, 174);
             this.addDriveButton.Name = "addDriveButton";
             this.addDriveButton.Size = new System.Drawing.Size(75, 23);
             this.addDriveButton.TabIndex = 2;
@@ -74,7 +74,7 @@
             // 
             this.randomDriveCheckbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.randomDriveCheckbox.AutoSize = true;
-            this.randomDriveCheckbox.Location = new System.Drawing.Point(960, 173);
+            this.randomDriveCheckbox.Location = new System.Drawing.Point(960, 178);
             this.randomDriveCheckbox.Name = "randomDriveCheckbox";
             this.randomDriveCheckbox.Size = new System.Drawing.Size(91, 17);
             this.randomDriveCheckbox.TabIndex = 3;
@@ -86,7 +86,7 @@
             // 
             this.saveRequiredLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.saveRequiredLabel.AutoSize = true;
-            this.saveRequiredLabel.Location = new System.Drawing.Point(94, 174);
+            this.saveRequiredLabel.Location = new System.Drawing.Point(94, 179);
             this.saveRequiredLabel.Name = "saveRequiredLabel";
             this.saveRequiredLabel.Size = new System.Drawing.Size(75, 13);
             this.saveRequiredLabel.TabIndex = 4;
@@ -97,13 +97,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1059, 201);
+            this.ClientSize = new System.Drawing.Size(1059, 206);
             this.Controls.Add(this.saveRequiredLabel);
             this.Controls.Add(this.randomDriveCheckbox);
             this.Controls.Add(this.addDriveButton);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.monitoredDrivesView);
-            this.MinimumSize = new System.Drawing.Size(1075, 240);
+            this.MinimumSize = new System.Drawing.Size(1075, 245);
             this.Name = "MainWindow";
             this.Text = "UsbMediaMonitor";
             ((System.ComponentModel.ISupportInitialize)(this.monitoredDrivesView)).EndInit();

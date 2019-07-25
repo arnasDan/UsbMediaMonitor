@@ -7,14 +7,15 @@ using UsbMonitor;
 using System.IO;
 using System.Linq;
 using MonitorFormsGUI.Properties;
+using System.Drawing;
 
 namespace MonitorFormsGUI
 {
     public partial class MainWindow : Form
     {
-        private readonly UsbDriveMonitor _monitor;
-        private readonly StorageManager<UsbDrive> _drivesStorage = new StorageManager<UsbDrive>();
         private readonly BindingList<UsbDrive> _drives;
+        private readonly UsbDriveMonitor _monitor;
+        private readonly StorageManager<UsbDrive> _drivesStorage;
 
         private bool RequiresSave
         {
@@ -22,22 +23,14 @@ namespace MonitorFormsGUI
             set => saveRequiredLabel.Visible = value;
         }
 
-        public MainWindow()
+        public MainWindow(UsbDriveMonitor monitor, StorageManager<UsbDrive> drivesStorage)
         {
             InitializeComponent();
             ShowDebugElements();
-            IEnumerable<UsbDrive> drives = null;
 
-            try
-            {
-                drives = _drivesStorage.Read();
-            }
-            catch (IOException exception)
-            {
-                MessageBox.Show(Strings.CannotReadDriveFile + exception.Message);
-            }
+            _monitor = monitor;
+            _drivesStorage = drivesStorage;
 
-            _monitor = new UsbDriveMonitor(drives);
             _drives = new BindingList<UsbDrive>(_monitor.AllDrives.Values.ToList());
 
             InitializeGrid();
@@ -59,6 +52,9 @@ namespace MonitorFormsGUI
 
         private void InitializeGrid()
         {
+            monitoredDrivesView.RowHeadersVisible = false;
+            monitoredDrivesView.AllowUserToResizeRows = false;
+            monitoredDrivesView.BackgroundColor = Color.White;
             monitoredDrivesView.DataSource = _drives;
             monitoredDrivesView.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False;
             foreach (DataGridViewColumn column in monitoredDrivesView.Columns)
@@ -77,7 +73,6 @@ namespace MonitorFormsGUI
                         break;
                 }
             }
-
 
             var openFileColumn = new DataGridViewButtonColumn()
             {

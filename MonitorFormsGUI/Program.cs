@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MonitorFormsGUI.Annotations;
 using MonitorFormsGUI.Properties;
+using UsbMonitor;
 
 namespace MonitorFormsGUI
 {
@@ -19,27 +20,9 @@ namespace MonitorFormsGUI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            MainWindow window = null;
-            using (var icon = new NotifyIcon()
+            using (var trayApplication = new TrayApplication())
             {
-                Icon = System.Drawing.SystemIcons.Information,
-                Visible = true
-            })
-            {
-                void WindowShow(object s, EventArgs e)
-                {
-                    if (window == null || window.IsDisposed)
-                        window = new MainWindow();
-                    window.Show();
-                }
-                icon.ContextMenu = new ContextMenu(new[]
-                {
-                    new MenuItem(Strings.Show, WindowShow),
-                    new MenuItem(Strings.Exit, (s, _) => Application.Exit())
-                });
-                icon.Click += WindowShow;
-                Application.Run();
-                icon.Visible = false;
+                trayApplication.Run();
             }
         }
     }
