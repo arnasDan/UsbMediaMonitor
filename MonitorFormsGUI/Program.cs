@@ -8,13 +8,13 @@ using MonitorFormsGUI.Properties;
 
 namespace MonitorFormsGUI
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         { 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -32,7 +32,7 @@ namespace MonitorFormsGUI
                         window = new MainWindow();
                     window.Show();
                 }
-                icon.ContextMenu = new ContextMenu(new MenuItem[]
+                icon.ContextMenu = new ContextMenu(new[]
                 {
                     new MenuItem(Strings.Show, WindowShow),
                     new MenuItem(Strings.Exit, (s, _) => Application.Exit())
