@@ -106,6 +106,15 @@ namespace MonitorFormsGUI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exit.
+        /// </summary>
+        internal static string Exit {
+            get {
+                return ResourceManager.GetString("Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Process running.
         /// </summary>
         internal static string IsProcessRunning {
@@ -183,6 +192,15 @@ namespace MonitorFormsGUI.Properties {
         internal static string SavingError {
             get {
                 return ResourceManager.GetString("SavingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show.
+        /// </summary>
+        internal static string Show {
+            get {
+                return ResourceManager.GetString("Show", resourceCulture);
             }
         }
         

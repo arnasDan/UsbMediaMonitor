@@ -165,4 +165,10 @@
   <data name="SaveUnsaved" xml:space="preserve">
     <value>Save unsaved changes?</value>
   </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>Show</value>
+  </data>
 </root>
