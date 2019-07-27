@@ -39,18 +39,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E1BC465ADF712CAAF8A8A2CC76D85419"
-        "OwnerKey" = "8:_D9F0203BC66E4C96AB2BE3916F365829"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E1BC465ADF712CAAF8A8A2CC76D85419"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_2CD3396F6D363FC3D85DCA09B5BD5D4C"
         "MsmSig" = "8:_UNDEFINED"
@@ -192,37 +180,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E1BC465ADF712CAAF8A8A2CC76D85419"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
-                "ScatterAssemblies"
-                {
-                    "_E1BC465ADF712CAAF8A8A2CC76D85419"
-                    {
-                    "Name" = "8:System.Net.Http.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:System.Net.Http.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_2E018CC70A6C4132A58BA249B8BBD09A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
         }
         "FileType"
         {
@@ -291,7 +248,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UsbMediaMonitor"
         "ProductCode" = "8:{21AEF495-FA26-408D-AAA5-11DFEC1F85A6}"
-        "PackageCode" = "8:{BABECF11-F07F-4176-B601-A5BA73E1E41C}"
+        "PackageCode" = "8:{D136F6FF-33B5-4973-975F-9B3E65DA99ED}"
         "UpgradeCode" = "8:{1F827040-91E4-4DF0-ADA6-FF53B49B4DAB}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -411,20 +368,6 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_8C1D7628E3DD495D9DFEFF4638098DB0"
-            {
-            "Name" = "8:Shortcut to Primary output from MonitorFormsGUI (Active)"
-            "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_D9F0203BC66E4C96AB2BE3916F365829"
-            "Folder" = "8:_E1CDE26C5F53421DA09FE3A80AF2F14B"
-            "WorkingFolder" = "8:_2E018CC70A6C4132A58BA249B8BBD09A"
-            "Icon" = "8:"
-            "Feature" = "8:"
-            }
         }
         "UserInterface"
         {
@@ -854,7 +797,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D9F0203BC66E4C96AB2BE3916F365829"
             {
-            "SourcePath" = "8:..\\MonitorFormsGUI\\obj\\Release\\UsbMediaMonitor.exe"
+            "SourcePath" = "8:..\\MonitorFormsGUI\\obj\\Debug\\UsbMediaMonitor.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_2E018CC70A6C4132A58BA249B8BBD09A"
