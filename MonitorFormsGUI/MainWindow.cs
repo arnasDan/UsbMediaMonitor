@@ -100,10 +100,10 @@ namespace MonitorFormsGUI
 
         private void NewDriveEventHandler(object sender, DriveConnectionEventArgs e)
         {
-            var addDrive = new Action(() =>
+            var addDrive = new Action<UsbDrive>(drive =>
             {
-                if (_drives.All(d => d.Uuid != e.Drive.Uuid))
-                    _drives.Add(e.Drive);
+                if (_drives.All(d => d.Uuid != drive.Uuid))
+                    _drives.Add(drive);
                 else
                 {
                     monitoredDrivesView.Update();
@@ -111,20 +111,17 @@ namespace MonitorFormsGUI
                 }
             });
             if (monitoredDrivesView.InvokeRequired)
-                monitoredDrivesView.Invoke(addDrive);
+                monitoredDrivesView.Invoke(addDrive, e.Drive);
             else
-                addDrive();
+                addDrive(e.Drive);
         }
         private void DisconnectedDriveEventHandler(object sender, DriveConnectionEventArgs e)
         {
-            var removeDrive = new Action(() => _drives.Remove(e.Drive));
-            if (!e.Drive.Monitored)
-            {
-                if (monitoredDrivesView.InvokeRequired)
-                    monitoredDrivesView.Invoke(removeDrive);
-                else
-                    removeDrive();
-            }
+            var removeDrive = new Action<UsbDrive>(drive => _drives.Remove(drive));
+            if (monitoredDrivesView.InvokeRequired)
+                    monitoredDrivesView.Invoke(removeDrive, e.Drive);
+            else
+                removeDrive(e.Drive);
 
         }
 

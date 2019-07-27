@@ -34,11 +34,8 @@ namespace UsbMonitor
             var eventType = e.NewEvent.Properties["EventType"].Value.ToString();
             if (eventType == "3") //"Remove" event
             {
-                if (AllDrives.TryGetValue(uuid, out var removedDrive))
-                {
-                    AllDrives.TryRemove(uuid, out _);
+                if (AllDrives.TryGetValue(uuid, out var removedDrive) && !removedDrive.Monitored && AllDrives.TryRemove(uuid, out _))
                     DriveRemoved?.Invoke(this, new DriveConnectionEventArgs(removedDrive));
-                }
                 return;
             }
 
@@ -46,23 +43,18 @@ namespace UsbMonitor
             var volumeLabel = new DriveInfo(volume.Substring(0, 1)).VolumeLabel;
 
             Debug.WriteLine($"Drive connected. UUID={uuid}, volume={volume}, volumeLabel={volumeLabel}");
-            var drive = AllDrives.AddOrUpdate(
+            var drive = AllDrives.GetOrAdd(
                 uuid,
-                new UsbDrive(uuid)
+                key => new UsbDrive(key)
                 {
                     DriveLetter = volume,
                     VolumeName = volumeLabel
-                },
-                (key, connectedDrive) =>
-                {
-                    Debug.WriteLine("Drive already known");
-                    connectedDrive.DriveLetter = volume;
-                    connectedDrive.VolumeName = volumeLabel;
-                    if (connectedDrive.Monitored)
-                        connectedDrive.ExecuteCommand();
-                    return connectedDrive;
                 }
             );
+            drive.DriveLetter = volume;
+            drive.VolumeName = volumeLabel;
+            if (drive.Monitored)
+                drive.ExecuteCommand();
             DriveArrived?.Invoke(this, new DriveConnectionEventArgs(drive));
         }
 
