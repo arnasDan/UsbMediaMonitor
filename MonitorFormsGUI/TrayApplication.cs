@@ -33,7 +33,7 @@ namespace MonitorFormsGUI
                 _monitor = new UsbDriveMonitor(_drivesStorage.Read());
 
             }
-            catch (IOException exception)
+            catch (Exception exception) when (exception is IOException || exception is UnauthorizedAccessException)
             {
                 MessageBox.Show(Strings.CannotReadDriveFile + exception.Message);
             }

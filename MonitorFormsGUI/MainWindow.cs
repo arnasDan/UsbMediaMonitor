@@ -142,7 +142,7 @@ namespace MonitorFormsGUI
                 if (showSuccessMessage)
                     MessageBox.Show(Strings.DriveListSaved);
             }
-            catch (IOException exception)
+            catch (Exception exception) when (exception is IOException || exception is UnauthorizedAccessException)
             {
                 MessageBox.Show(Strings.SavingError + exception.Message);
             }
